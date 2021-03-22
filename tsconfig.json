@@ -16,7 +16,13 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@entities/*": ["entities"],
+      "@use-cases/*": ["use-cases"],
+      "@pages/*": ["pages"]
+    }
   },
   "include": [
     "next-env.d.ts",

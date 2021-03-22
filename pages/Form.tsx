@@ -1,15 +1,16 @@
 import { useState } from "react"
 
-export type formProps = {
+export type FormProps = {
   onSubmit: (value: string) => void
 }
-export default (props: formProps) => {
+
+export default function Form({ onSubmit }: FormProps) {
   const [text, setText] = useState('')
   
   return (
     <form onSubmit={(e) => {
       e.preventDefault()
-      props.onSubmit(text)
+      onSubmit(text)
       setText('')
     }}>
       <input

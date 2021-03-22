@@ -1,13 +1,13 @@
 import Head from 'next/head'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { TodoInteractor } from '../use-cases/TodosInteractor'
 import Form from './Form'
 
 export default function Home() {
   const [todos, setTodos] = useState([])
-  const setComplete = (index: number, complete: boolean) => {
-    setTodos(todos.map((todo, i) => ({ ...todo, complete: index === i ? complete : todo.complete }) ))
-  }
-  
+  const todoUseCase = new TodoInteractor(todos, setTodos)
+  const setComplete = (index: number, complete: boolean) => { todoUseCase.completeTodo(index, complete ) }
+  useEffect(() => { todoUseCase.listTodos() }, [])
   return (
     <div className="min-h-screen dark:bg-gray-800 dark:text-white bg-gray-100 flex flex-col items-center justify-center sm:py-12">
       <Head>
@@ -15,8 +15,8 @@ export default function Home() {
       </Head>
       <main>
         <h1 className="text-4xl text-center mb-4 font-thin">todo next</h1>
-        <div className="bg-white p-4 rounded-lg shadow-md w-500">
-          <Form onSubmit={(text) => setTodos([...todos, { text, complete: false }])} />
+        <div className="bg-white p-4 rounded-lg shadow-md" style={{ width: 500 }}>
+          <Form onSubmit={(text) => todoUseCase.createTodo(text) } />
           <ul className="mt-2">
             {
               todos.map(({text, complete}, index) =>
