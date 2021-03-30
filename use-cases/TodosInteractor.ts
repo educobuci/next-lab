@@ -3,32 +3,30 @@ import { Todo } from "../entities/Todo"
 export type TodosPresenter = (todos: Array<Todo>) => void
 
 export interface TodosInteractorInterface {
-  createTodo(text: string): void
-  completeTodo(index: number, complete: boolean): void
-  listTodos(): void
+  createTodo(text: string, presenter: TodosPresenter): void
+  completeTodo(index: number, complete: boolean, presenter: TodosPresenter): void
+  listTodos(presenter: TodosPresenter): void
 }
 
 export class TodosInteractor implements TodosInteractorInterface {
   todos: Array<Todo>
-  presenter: TodosPresenter
 
-  constructor(presenter: TodosPresenter) {
+  constructor() {
     this.todos = []
-    this.presenter = presenter
   }
 
-  createTodo(text: string): void {
+  createTodo(text: string, presenter: TodosPresenter): void {
     this.todos = [...this.todos, { text, complete: false} ]
-    this.presenter(this.todos)
+    presenter(this.todos)
   }
 
-  completeTodo(index: number, complete: boolean): void {
+  completeTodo(index: number, complete: boolean, presenter: TodosPresenter): void {
     this.todos = this.todos.map((todo, i) => ({ ...todo, complete: index === i ? complete : todo.complete }))
-    this.presenter(this.todos)
+    presenter(this.todos)
   }
 
-  async listTodos(): Promise<void> {
+  async listTodos(presenter: TodosPresenter): Promise<void> {
     this.todos = await Promise.resolve([{ text: 'Fake Todo from DB', complete: false }])
-    this.presenter(this.todos)
+    presenter(this.todos)
   }
 }
